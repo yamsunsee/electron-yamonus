@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    @apply select-none text-darkGray;
+  }
+}
+
+@layer components {
+  .tasks {
+    @apply flex-grow overflow-scroll w-full flex flex-col gap-4 p-8 border border-[#0003];
+  }
+
+  .task {
+    @apply bg-white px-4 py-3 relative cursor-pointer transition-all drop-shadow tracking-widest font-bold hover:text-white flex justify-between items-center min-h-[3rem] duration-500 ease-out;
+  }
+
+  .task {
+    @apply before:absolute before:w-1 before:h-full before:top-0 before:right-0 hover:before:w-full before:transition-all before:-z-10 before:duration-300 before:ease-out;
+  }
+
+  .task.level-0 {
+    @apply before:bg-trivial;
+  }
+
+  .task.level-0.schedule,
+  .task.level-0.schedule.status {
+    @apply after:bg-trivial;
+  }
+
+  .task.level-1 {
+    @apply before:bg-urgent;
+  }
+
+  .task.level-1.schedule,
+  .task.level-1.schedule.status {
+    @apply after:bg-urgent;
+  }
+
+  .task.level-2 {
+    @apply before:bg-important;
+  }
+
+  .task.level-2.schedule,
+  .task.level-2.schedule.status {
+    @apply after:bg-important;
+  }
+
+  .task.level-3 {
+    @apply before:bg-vital;
+  }
+
+  .task.level-3.schedule,
+  .task.level-3.schedule.status {
+    @apply after:bg-vital;
+  }
+
+  .task.schedule {
+    @apply after:absolute after:w-1 after:h-full after:top-0 after:right-2 after:transition-all after:-z-10 after:duration-300 after:ease-out hover:after:bg-white;
+  }
+
+  .task.demo {
+    @apply before:w-full text-white;
+  }
+
+  .task.demo.schedule {
+    @apply after:bg-white;
+  }
+
+  .task.status {
+    @apply line-through opacity-50 hover:before:w-1 hover:opacity-100 hover:text-current;
+  }
+
+  .task.deleted {
+    @apply -translate-y-full transform opacity-0 cursor-default hover:opacity-0;
+  }
+
+  .mode {
+    @apply px-2 py-1 bg-mode text-white uppercase font-black tracking-widest flex items-center justify-center;
+  }
+
+  .item {
+    @apply italic px-2 py-1 text-white tracking-widest transition-all ease-in;
+  }
+
+  .item span {
+    @apply font-bold;
+  }
+
+  .item.vital {
+    @apply bg-vital;
+  }
+
+  .item.important {
+    @apply bg-important;
+  }
+
+  .item.urgent {
+    @apply bg-urgent;
+  }
+
+  .item.trivial {
+    @apply bg-trivial;
+  }
+
+  .item.occasional {
+    @apply bg-occasional;
+  }
+
+  .item.recurring {
+    @apply bg-recurring;
+  }
+
+  .item.pending {
+    @apply bg-pending;
+  }
+
+  .item.completed {
+    @apply bg-completed;
+  }
+
+  .item.title {
+    @apply uppercase font-bold;
+  }
+
+  .item.active {
+    @apply transform -translate-y-1 shadow-[4px_4px_4px_#0003];
+  }
+
+  .input {
+    @apply px-8 py-4 focus:outline-none w-full font-bold tracking-widest placeholder:font-normal placeholder:italic placeholder:text-xs flex-grow border border-[#0003];
+  }
+
+  .input.format {
+    @apply text-xs italic w-40 text-center ml-[-1px];
+  }
+
+  .input-hidden {
+    @apply flex;
+  }
+
+  .tag {
+    @apply px-1 py-[2px] font-bold uppercase text-xs text-white inline-block -skew-x-12 not-italic;
+  }
+}
