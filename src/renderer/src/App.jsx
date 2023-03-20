@@ -648,6 +648,123 @@ const App = () => {
     }
   }
 
+  const sortTasks = (tasks, sequence) => {
+    const getIndex = (character) => {
+      const index = sequence.indexOf(character)
+      return index > -1 ? index : sequence.length
+    }
+
+    const getLastIndex = (character) => {
+      const index = sequence.lastIndexOf(character)
+      return index > -1 ? index : sequence.length
+    }
+
+    const getMinIndex = (array) => {
+      return Math.min(...array.map((character) => getIndex(character)))
+    }
+
+    const getQuantity = (array) => {
+      let total = 0
+      array.forEach((character) => {
+        if (sequence.includes(character)) total += 1
+      })
+      return total > 1
+    }
+
+    const sortByPriorities = (tasks) => {
+      const getCharacter = (value) => ['t', 'u', 'i', 'v'][value]
+      return tasks.sort(
+        (a, b) => getLastIndex(getCharacter(a.level)) - getLastIndex(getCharacter(b.level))
+      )
+    }
+
+    const sortByStatus = (tasks) => {
+      const getCharacter = (value) => ['p', 'c'][+value]
+      return tasks.sort(
+        (a, b) =>
+          getLastIndex(getCharacter(a.isCompleted)) - getLastIndex(getCharacter(b.isCompleted))
+      )
+    }
+
+    const sortBySchedule = (tasks) => {
+      const getCharacter = (value) => ['o', 'r'][+value]
+      return tasks.sort(
+        (a, b) =>
+          getLastIndex(getCharacter(a.isRecurring)) - getLastIndex(getCharacter(b.isRecurring))
+      )
+    }
+
+    const sortByName = (tasks) =>
+      tasks.sort((a, b) => new Intl.Collator('vi').compare(a.name, b.name))
+
+    const getOrder = () => {
+      let order = {}
+      const len = sequence.length
+      const priorities = getMinIndex(['t', 'u', 'i', 'v'])
+      if (priorities !== len && getQuantity(['t', 'u', 'i', 'v'])) order['x'] = priorities
+      const status = getMinIndex(['p', 'c'])
+      if (status !== len && getQuantity(['p', 'c'])) order['y'] = status
+      const schedule = getMinIndex(['o', 'r'])
+      if (schedule !== len && getQuantity(['o', 'r'])) order['z'] = schedule
+      return Object.keys(order)
+        .sort((a, b) => order[a] - order[b])
+        .join('')
+    }
+
+    const order = getOrder()
+    let newTasks = sortByName(tasks)
+
+    switch (order) {
+      case 'x':
+        return sortByPriorities(newTasks)
+
+      case 'y':
+        return sortByStatus(newTasks)
+
+      case 'z':
+        return sortBySchedule(newTasks)
+
+      case 'xy':
+        return sortByPriorities(sortByStatus(newTasks))
+
+      case 'yx':
+        return sortByStatus(sortByPriorities(newTasks))
+
+      case 'xz':
+        return sortByPriorities(sortBySchedule(newTasks))
+
+      case 'zx':
+        return sortBySchedule(sortByPriorities(newTasks))
+
+      case 'yz':
+        return sortByStatus(sortBySchedule(newTasks))
+
+      case 'zy':
+        return sortBySchedule(sortByStatus(newTasks))
+
+      case 'xyz':
+        return sortByPriorities(sortByStatus(sortBySchedule(newTasks)))
+
+      case 'xzy':
+        return sortByPriorities(sortBySchedule(sortByStatus(newTasks)))
+
+      case 'yxz':
+        return sortByStatus(sortByPriorities(sortBySchedule(newTasks)))
+
+      case 'yzx':
+        return sortByStatus(sortBySchedule(sortByPriorities(newTasks)))
+
+      case 'zxy':
+        return sortBySchedule(sortByPriorities(sortByStatus(newTasks)))
+
+      case 'zyx':
+        return sortBySchedule(sortByStatus(sortByPriorities(newTasks)))
+
+      default:
+        return newTasks
+    }
+  }
+
   const quantity = useMemo(() => {
     let output = [
       { color: 'trivial', value: 0 },
@@ -683,10 +800,16 @@ const App = () => {
       if (allLevels.length > 0) newTasks = newTasks.filter((task) => allLevels.includes(task.level))
     }
     return newTasks
-  }, [tasks, content, format])
+  }, [tasks, content, format, mode])
+
+  const sortedTasks = useMemo(() => {
+    if (mode === 'Normal' || mode === 'Insert') return filteredTasks
+    const newTasks = sortTasks(filteredTasks, format)
+    return newTasks
+  }, [filteredTasks, content, format, mode])
 
   const renderTasks = useMemo(() => {
-    if (mode !== 'Edit') return filteredTasks
+    if (mode !== 'Edit') return sortedTasks
     let newTasks = filteredTasks
     if (contentEdit.trim().length > 0)
       newTasks = newTasks.map((task) => ({
@@ -719,7 +842,7 @@ const App = () => {
     }
     setEditedTasks(newTasks)
     return newTasks
-  }, [filteredTasks, contentEdit, formatEdit])
+  }, [sortedTasks, contentEdit, formatEdit, mode])
 
   useEffect(() => {
     if (renderTasks.length === 1) setContentEdit(renderTasks[0].name)

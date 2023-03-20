@@ -1,6 +1,6 @@
 {
   "name": "Yamonus",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A 'no-mouse' task management",
   "main": "./out/main/index.js",
   "author": "Yamdev",

@@ -96,7 +96,7 @@ const Help = ({ helpRef }) => {
           <span className="uppercase text-5xl font-black">Give "Jerry" a break!</span>
         </div>
         <div className="text-xs text-gray w-full text-center">
-          Made by @yamdev. Latest update: 10/03/2023. Current version: 2.1.0
+          Made by @yamdev. Latest update: 21/03/2023. Current version: 2.2.0
         </div>
       </div>
     </div>
