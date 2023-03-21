@@ -29,7 +29,7 @@ const App = () => {
   }, [])
 
   const getLocalData = async () => {
-    let { isHideCommands, tasks } = await readData()
+    let { isShowHelp, isHideCommands, tasks } = await readData()
     const today = new Date().toDateString()
     const newTasks = tasks.map((task) => {
       if (task.isRecurring && task.time !== today)
@@ -40,7 +40,8 @@ const App = () => {
         }
       return task
     })
-    saveData({ isHideCommands, tasks: newTasks })
+    saveData({ isShowHelp, isHideCommands, tasks: newTasks })
+    setShowHelp(isShowHelp)
     setHideCommands(isHideCommands)
     setTasks(newTasks)
   }
@@ -128,7 +129,7 @@ const App = () => {
         },
         ...prev
       ]
-      saveData({ isHideCommands, tasks: newTasks })
+      saveData({ isShowHelp, isHideCommands, tasks: newTasks })
       return newTasks
     })
     containerTasksRef.current.scrollTo(0, 0)
@@ -152,7 +153,7 @@ const App = () => {
         }
         return task
       })
-      saveData({ isHideCommands, tasks: newTasks })
+      saveData({ isShowHelp, isHideCommands, tasks: newTasks })
       return newTasks
     })
   }
@@ -161,7 +162,7 @@ const App = () => {
     if (mode === 'Edit') return
     setTasks((prev) => {
       const newTasks = prev.filter((task) => task.id !== target)
-      saveData({ isHideCommands, tasks: newTasks })
+      saveData({ isShowHelp, isHideCommands, tasks: newTasks })
       return newTasks
     })
   }
@@ -180,7 +181,7 @@ const App = () => {
         }
         return newTasks
       }, [])
-      saveData({ isHideCommands, tasks: newTasks })
+      saveData({ isShowHelp, isHideCommands, tasks: newTasks })
       return newTasks
     })
     setMode('Filter')
@@ -585,17 +586,23 @@ const App = () => {
     event.preventDefault()
     switch (event.key) {
       case 'Enter':
-        if (isShowHelp) setShowHelp(false)
-        else if (mode === 'Insert') {
+        if (isShowHelp) {
+          setShowHelp(false)
+          saveData({ isShowHelp: false, isHideCommands, tasks })
+        } else if (mode === 'Insert') {
           handleInsert()
+          setContent('')
+          setFormat('')
+          contentRef.current.focus()
         }
-        setContent('')
-        setFormat('')
-        contentRef.current.focus()
         break
 
+      case ' ':
       case 'Escape':
-        if (isShowHelp) setShowHelp(false)
+        if (isShowHelp) {
+          setShowHelp(false)
+          saveData({ isShowHelp: false, isHideCommands, tasks })
+        }
         break
 
       case 'i':
@@ -628,7 +635,7 @@ const App = () => {
         if (mode === 'Normal')
           setHideCommands((prev) => {
             const newHideCommands = !prev
-            saveData({ isHideCommands: newHideCommands, tasks })
+            saveData({ isShowHelp, isHideCommands: newHideCommands, tasks })
             return newHideCommands
           })
         break

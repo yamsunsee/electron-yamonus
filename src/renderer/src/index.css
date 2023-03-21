@@ -22,7 +22,7 @@
   }
 
   .task {
-    @apply before:absolute before:w-1 before:h-full before:top-0 before:right-0 hover:before:w-full before:transition-all before:-z-10 before:duration-300 before:ease-out;
+    @apply before:absolute before:w-[6px] before:h-full before:top-0 before:right-0 hover:before:w-full before:transition-all before:-z-10 before:duration-300 before:ease-out;
   }
 
   .task.level-0 {
@@ -62,7 +62,7 @@
   }
 
   .task.schedule {
-    @apply after:absolute after:w-1 after:h-full after:top-0 after:right-2 after:transition-all after:-z-10 after:duration-300 after:ease-out hover:after:bg-white;
+    @apply after:absolute after:w-[3px] after:h-full after:top-0 after:right-2 after:transition-all after:-z-10 after:duration-300 after:ease-out hover:after:bg-white;
   }
 
   .task.demo {
@@ -74,7 +74,7 @@
   }
 
   .task.status {
-    @apply line-through opacity-50 hover:before:w-1 hover:opacity-100 hover:text-current;
+    @apply line-through opacity-50 hover:before:w-[6px] hover:opacity-100 hover:text-current;
   }
 
   .task.deleted {

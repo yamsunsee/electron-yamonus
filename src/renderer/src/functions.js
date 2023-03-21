@@ -66,7 +66,7 @@ const readData = async () => {
     const data = handleDecode(rawData)
     return data
   } catch (error) {
-    saveData({ isHideCommands: false, tasks: [] })
+    saveData({ isShowHelp: true, isHideCommands: false, tasks: [] })
     return []
   }
 }
