@@ -67,7 +67,7 @@ const readData = async () => {
     return data
   } catch (error) {
     saveData({ isShowHelp: true, isHideCommands: false, tasks: [] })
-    return []
+    return { isShowHelp: true, isHideCommands: false, tasks: [] }
   }
 }
 
